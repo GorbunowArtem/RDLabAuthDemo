@@ -1,8 +1,12 @@
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RDLabAuthDemo.BasicJwt.Config;
 
@@ -24,7 +28,22 @@ namespace RDLabAuthDemo.BasicJwt
 
 			services.AddOptions<JwtTokenOptions>()
 				.Bind(Configuration.GetSection(JwtTokenOptions.Name));
-			
+
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(options =>
+				{
+					options.Events = new JwtBearerEvents
+					{
+						OnAuthenticationFailed = context => { return Task.CompletedTask; }
+					};
+					options.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidAudience = Configuration["JwtToken:Audience"],
+						ValidIssuer = Configuration["JwtToken:Issuer"],
+						IssuerSigningKey =
+							new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtToken:Key"]))
+					};
+				});
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo {Title = "RDLabAuthDemo.BasicJwt", Version = "v1"});
@@ -44,6 +63,8 @@ namespace RDLabAuthDemo.BasicJwt
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
+
+			app.UseAuthentication();
 
 			app.UseAuthorization();
 

@@ -11,7 +11,7 @@ namespace RDLabAuthDemo.BasicJwt.Controllers
 {
 	[ApiController]
 	[Route("token")]
-	public class TokenController: ControllerBase
+	public class TokenController : ControllerBase
 	{
 		private readonly IOptions<JwtTokenOptions> _options;
 
@@ -23,23 +23,26 @@ namespace RDLabAuthDemo.BasicJwt.Controllers
 		[HttpGet]
 		public ActionResult<string> Token(string userName, string password)
 		{
-			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.Key));
-			var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-			
-			var token = new JwtSecurityToken(
-				_options.Value.Key,
-				_options.Value.Audience,
-				new Claim[]
-				{
-					new(JwtRegisteredClaimNames.Iss, _options.Value.Issuer),
-					new (JwtRegisteredClaimNames.Email, "some.email@mail.com")
-				},
-				DateTime.UtcNow,
-				DateTime.UtcNow.AddHours(1),
-				credentials);
-			
-			return Ok(new JwtSecurityTokenHandler().WriteToken(token));
-		}
+			if (string.Equals(userName, "artem")
+			    && string.Equals(password, "securePassword") )
+			{
+				var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.Key));
+				var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+				var token = new JwtSecurityToken(
+					_options.Value.Issuer,
+					_options.Value.Audience,
+					new Claim[]
+					{
+						new(JwtRegisteredClaimNames.Iss, _options.Value.Issuer),
+						new(JwtRegisteredClaimNames.Email, "some.email@mail.com")
+					},
+					DateTime.UtcNow,
+					DateTime.UtcNow.AddHours(1),
+					credentials);
+				return Ok(new {access_token = new JwtSecurityTokenHandler().WriteToken(token)});
+			}
 
+			return Challenge();
+		}
 	}
 }

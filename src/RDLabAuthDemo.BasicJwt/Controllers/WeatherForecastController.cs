@@ -15,7 +15,7 @@ using RDLabAuthDemo.BasicJwt.Config;
 namespace RDLabAuthDemo.BasicJwt.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+	[Route("weather")]
 	public class WeatherForecastController : ControllerBase
 	{
 		private readonly ILogger<WeatherForecastController> _logger;
