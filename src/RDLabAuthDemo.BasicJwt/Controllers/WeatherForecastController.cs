@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using RDLabAuthDemo.BasicJwt.Config;
 
 namespace RDLabAuthDemo.BasicJwt.Controllers
 {
@@ -12,11 +18,6 @@ namespace RDLabAuthDemo.BasicJwt.Controllers
 	[Route("[controller]")]
 	public class WeatherForecastController : ControllerBase
 	{
-		private static readonly string[] Summaries = new[]
-		{
-			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-		};
-
 		private readonly ILogger<WeatherForecastController> _logger;
 
 		public WeatherForecastController(ILogger<WeatherForecastController> logger)
@@ -38,5 +39,10 @@ namespace RDLabAuthDemo.BasicJwt.Controllers
 				})
 				.ToArray();
 		}
+
+		private static readonly string[] Summaries = new[]
+		{
+			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+		};
 	}
 }

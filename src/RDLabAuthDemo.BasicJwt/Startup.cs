@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RDLabAuthDemo.BasicJwt.Config;
 
 namespace RDLabAuthDemo.BasicJwt
 {
@@ -20,6 +21,10 @@ namespace RDLabAuthDemo.BasicJwt
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+
+			services.AddOptions<JwtTokenOptions>()
+				.Bind(Configuration.GetSection(JwtTokenOptions.Name));
+			
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo {Title = "RDLabAuthDemo.BasicJwt", Version = "v1"});
