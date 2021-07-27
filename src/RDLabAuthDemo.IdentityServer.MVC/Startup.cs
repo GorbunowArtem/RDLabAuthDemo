@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,10 @@ namespace RDLabAuthDemo.IdentityServer.MVC
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddMvc();
+			
 			JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+			
 			services.AddAuthentication(options =>
 				{
 					options.DefaultScheme = "Cookies";
@@ -33,16 +37,12 @@ namespace RDLabAuthDemo.IdentityServer.MVC
 				.AddCookie("Cookies")
 				.AddOpenIdConnect("oidc", options =>
 				{
+					options.SignOutScheme = "Cookies";
 					options.Authority = "https://localhost:5002";
-
+					options.RequireHttpsMetadata = false;
 					options.ClientId = "rdlab.authcode.client";
-					options.ClientSecret = "49C1A7E1-0C79-4A89-A3D6-A37998FB86B0";
-					options.ResponseType = "code";
-
 					options.SaveTokens = true;
 				});
-			
-			services.AddControllersWithViews();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,8 +58,6 @@ namespace RDLabAuthDemo.IdentityServer.MVC
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
-
-			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
 			app.UseRouting();
@@ -72,10 +70,6 @@ namespace RDLabAuthDemo.IdentityServer.MVC
 			{
 				endpoints.MapDefaultControllerRoute()
 					.RequireAuthorization();
-				
-				endpoints.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
 		}
 	}
