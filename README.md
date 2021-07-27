@@ -16,3 +16,10 @@ dotnet user-secrets set "JwtToken:Key" "YOUR_KEY"
 dotnet user-secrets list
 ```
 - more details can be found [here](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows)
+
+## RDLabAuthDemo.IdentityServer
+- install identity server templates
+```c#
+dotnet new -i IdentityServer4.Templates
+```
+- used this quickstart [guide](https://identityserver4.readthedocs.io/en/latest/quickstarts/1_client_credentials.html)
