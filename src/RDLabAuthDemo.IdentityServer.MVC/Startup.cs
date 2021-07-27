@@ -42,6 +42,7 @@ namespace RDLabAuthDemo.IdentityServer.MVC
 					options.RequireHttpsMetadata = false;
 					options.ClientId = "rdlab.authcode.client";
 					options.SaveTokens = true;
+					options.ResponseType = "id_token token";
 				});
 		}
 
