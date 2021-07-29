@@ -32,6 +32,7 @@ namespace RDLabAuthDemo.IdentityServer.Api
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
+                    // Identity server
                     options.Authority = "https://localhost:5002";
 
                     options.TokenValidationParameters = new TokenValidationParameters

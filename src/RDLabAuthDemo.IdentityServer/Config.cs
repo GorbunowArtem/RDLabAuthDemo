@@ -53,6 +53,22 @@ namespace RDLabAuthDemo.IdentityServer
 					RequireConsent = true,
 					AllowAccessTokensViaBrowser = true
 				},
+				
+				new Client
+				{
+					ClientId = "rdlab.authcode.client.sso",
+					ClientName = "RD Lab demo Implicit Client",
+					AllowedGrantTypes = GrantTypes.Implicit,
+					RedirectUris = {"https://localhost:5001/signin-oidc"},
+					PostLogoutRedirectUris = {"https://localhost:5001/signout-callback-oidc"},
+					AllowedScopes =
+					{
+						IdentityServerConstants.StandardScopes.OpenId,
+						IdentityServerConstants.StandardScopes.Profile,
+					},
+					RequireConsent = true,
+					AllowAccessTokensViaBrowser = true
+				},
 			};
 	}
 }
